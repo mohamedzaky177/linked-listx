@@ -6,7 +6,13 @@
 #include<conio.h>
 #include<string.h>
 #include <time.h>
+//clock_t begin = clock();
 
+/* here, do your time-consuming job */
+
+//clock_t end = clock();
+//double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+//printf("\n Time is %f\n", time_spent);
 
 
 int N;
@@ -46,6 +52,70 @@ int main()
     printf("hello to students Data structure program \n");
     array();
     list();
+}
+
+/* contructing the dynamic array */
+void array(void)
+{
+    N = 0;
+    printf("\nNumber of students intially in array: ");
+    scanf("%i" , &N);
+    fflush(stdin);
+    if( N== INT_MAX )
+    {
+        return;
+    }
+    st *arr = malloc(sizeof(st)*N);
+    for (int i=0; i < N; i++)
+    {
+        printf("\nenter student %i info \n", i+1);
+        get_infoarr(arr+i);
+    }
+
+    //for (int i=0; i < N; i++)
+    //{
+    //    printf("%i\n", (arr+i) -> id);
+    //}
+
+    printf("\nInsert student in the begining of array");
+    insertbegarr(&arr);
+
+
+    printf("\nInsert student in the end of array");
+    insertendarr(arr);
+
+
+    int x;
+    printf("\nindex of new student in array (note that index start from 0 and ends at %i): ", N);
+    scanf("%i" , &x);
+
+    fflush(stdin);
+    if (x == N)
+    {
+        insertendarr(arr);
+    }
+    else if(x == 0)
+    {
+        insertbegarr(&arr);
+    }
+    else if( x > 0 && x < N)
+    {
+        insertmidarr(&arr ,x);
+    }
+    else
+    {
+        printf("index is not correct\n");
+    }
+
+    printf("\nIDs and names of students in array\n");
+    for (int i=0; i < N; i++)
+    {
+        printf("%i", (arr+i) -> id);
+        printf("\t%s\n",(arr+i) -> name);
+    }
+
+    free(arr);
+
 }
 
 /* contructing the linked list */
@@ -235,3 +305,93 @@ void insertmiddle(node *head, int x)
         N++;
 }
 
+/* functions of array */
+
+void get_infoarr(struct st  *arr)
+{
+
+    printf("student id: ");
+    scanf("%i" , &(arr->id));
+    fflush(stdin);
+    printf("student birth year : ");
+    scanf("%i" , &(arr->birth_year));
+    fflush(stdin);
+    printf("student birth month : ");
+    scanf("%i" , &(arr->birth_month));
+    fflush(stdin);
+    printf("student birth day : ");
+    scanf("%i" , &(arr->birth_day));
+    fflush(stdin);
+    printf("student name: ");
+    scanf("%s" , (arr->name));
+    fflush(stdin);
+
+}
+
+void insertendarr(st *arr)
+{
+    N++;
+    st *temp = arr;
+    arr = realloc(arr,sizeof(st)*N);
+    printf("\nenter student info \n");
+    get_infoarr(temp+N-1);
+    //(arr+N-1)->id = 4;
+    //(arr+N-1)->birth_year = 2;
+    //(arr+N-1)->birth_month = 2;
+    //(arr+N-1)->birth_day = 2;
+    //strcpy((arr+N-1) -> name , "mohamed" ) ;
+}
+void insertbegarr(st **a)
+{
+    N++;
+    st *temp = malloc(sizeof(st)*N);
+    for (int i=0; i < N-1; i++)
+    {
+        (temp + i + 1)->birth_day = ( (*a) + i )->birth_day;
+        (temp + i + 1)->birth_month = ( (*a) + i )->birth_month;
+        (temp + i + 1)->birth_year = ( (*a) + i )->birth_year;
+        (temp + i + 1)->id = ( (*a) + i )->id;
+        strcpy((temp + i + 1) -> name , ( (*a) + i ) -> name ) ;
+    }
+    free(*a);
+    printf("\nenter student info \n");
+    get_infoarr(temp);
+    //temp->id = 2;
+    //temp->birth_year = 2;
+    //temp->birth_month = 2;
+    //temp->birth_day = 2;
+    //strcpy(temp -> name , "mohamed" ) ;
+    *a = temp;
+}
+void insertmidarr(st **a, int x)
+{
+    N++;
+    st *temp = malloc(sizeof(st)*N);
+    for (int i=0; i < x; i++)
+    {
+        (temp + i )->birth_day = ( (*a) + i )->birth_day;
+        (temp + i )->birth_month = ( (*a) + i )->birth_month;
+        (temp + i )->birth_year = ( (*a) + i )->birth_year;
+        (temp + i )->id = ( (*a) + i )->id;
+        strcpy((temp + i
+                ) -> name , ( (*a) + i ) -> name ) ;
+    }
+    printf("\nenter student info \n");
+    get_infoarr(temp + x);
+    //(temp + x)->id = 3;
+    //(temp + x)->birth_year = 2;
+    //(temp + x)->birth_month = 2;
+    //(temp + x)->birth_day = 2;
+    //strcpy((temp + x) -> name , "mohamed" ) ;
+
+    for (int i = x + 1; i < N ; i++)
+    {
+        (temp + i )->birth_day = ( (*a) + i - 1)->birth_day;
+        (temp + i )->birth_month = ( (*a) + i - 1)->birth_month;
+        (temp + i )->birth_year = ( (*a) + i - 1)->birth_year;
+        (temp + i )->id = ( (*a) + i - 1)->id;
+        strcpy((temp + i ) -> name , ( (*a) + i - 1 ) -> name ) ;
+    }
+    free(*a);
+    *a = temp;
+}
